@@ -1,5 +1,6 @@
 ﻿using MoneyTracker.Domain.Abstractions;
 using MoneyTracker.Domain.Users.Events;
+using MoneyTracker.Domain.Users.UserAggregate;
 
 namespace MoneyTracker.Domain.Users.Aggregators;
 
