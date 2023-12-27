@@ -1,11 +1,6 @@
 ﻿namespace MoneyTracker.Application.Exceptions;
 
-public class ValidationException : Exception
+public class ValidationException(IEnumerable<ValidationError> errors) : Exception
 {
-    public ValidationException(IEnumerable<ValidationError> errors)
-    {
-        Errors = errors;
-    }
-
-    public IEnumerable<ValidationError> Errors { get; }
+    public IEnumerable<ValidationError> Errors { get; } = errors;
 }

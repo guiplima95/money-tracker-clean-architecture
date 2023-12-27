@@ -13,9 +13,6 @@
 
 	<ItemGroup>
 		<Folder Include="Categories\Events\" />
-		<Folder Include="Categories\Repositories\" />
-		<Folder Include="Transactions\Events\" />
-		<Folder Include="Transactions\Repositories\" />
 	</ItemGroup>
 
 </Project>

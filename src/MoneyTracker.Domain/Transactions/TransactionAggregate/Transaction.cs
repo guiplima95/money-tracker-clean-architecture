@@ -1,5 +1,6 @@
 ﻿using MoneyTracker.Domain.Abstractions;
 using MoneyTracker.Domain.Shared;
+using MoneyTracker.Domain.Transactions.Events;
 
 namespace MoneyTracker.Domain.Transactions.TransactionAggregate;
 
@@ -10,13 +11,15 @@ public sealed class Transaction : Entity
         Money amount,
         Note note,
         DateOnly date,
-        Guid categoryId)
+        Guid categoryId,
+        Guid userId)
         : base(id)
     {
         Amount = amount;
         Note = note;
         Date = date;
         CategoryId = categoryId;
+        UserId = userId;
     }
 
     public Money Amount { get; private set; } = null!;
@@ -27,8 +30,15 @@ public sealed class Transaction : Entity
 
     public Guid CategoryId { get; set; }
 
-    public static Transaction Create(Money amount, Note note, DateOnly date, Guid categoryId)
+    public Guid UserId { get; set; }
+
+    public static Transaction Create(Money amount, Note note, DateOnly date, Guid categoryId, Guid userId)
     {
-        return new(Guid.NewGuid(), amount, note, date, categoryId);
+        Transaction transaction = new(Guid.NewGuid(), amount, note, date, categoryId, userId);
+
+        transaction.RaiseDomainEvent(
+            new TransactionCreatedDomainEvent(transaction.UserId, transaction.Id));
+
+        return transaction;
     }
 }
