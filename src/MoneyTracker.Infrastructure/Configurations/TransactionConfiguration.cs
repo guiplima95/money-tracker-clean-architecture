@@ -16,19 +16,26 @@ internal sealed class TransactionConfiguration : IEntityTypeConfiguration<Transa
 
         builder.Property(c => c.Date);
 
-        builder
-            .ComplexProperty(transaction => transaction.Note)
-            .Property(c => c.Value)
-            .HasMaxLength(500);
+        builder.Property(tran => tran.Note)
+            .HasMaxLength(500)
+            .HasConversion(note => note.Value, value => new Note(value));
 
-        builder.OwnsOne(c => c.Amount, amount =>
+        builder.OwnsOne(c => c.Amount, amountBuilder =>
         {
-            amount.Property(money => money.Currency)
-                  .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
+            amountBuilder.Property(money => money.Currency)
+                .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
         });
 
-        builder.HasOne<Category>()
-           .WithMany()
-           .HasForeignKey(c => c.CategoryId);
+        builder.HasOne(t => t.Category)
+            .WithOne(c => c.Transaction)
+            .HasForeignKey<Category>(c => c.Id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(t => t.User)
+            .WithMany(u => u.Transactions)
+            .HasForeignKey(t => t.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property<uint>("Version").IsRowVersion();
     }
 }

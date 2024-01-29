@@ -42,12 +42,7 @@ public abstract class Enumeration : IComparable
 
     public int CompareTo(object obj)
     {
-        if (obj is null)
-        {
-            throw new ArgumentNullException(nameof(obj));
-        }
-
-        return Id.CompareTo(((Enumeration)obj).Id);
+        return obj is null ? throw new ArgumentNullException(nameof(obj)) : Id.CompareTo(((Enumeration)obj).Id);
     }
 
     public static bool operator ==(Enumeration left, Enumeration right)

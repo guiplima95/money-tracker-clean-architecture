@@ -2,15 +2,26 @@
 using Microsoft.EntityFrameworkCore;
 using MoneyTracker.Application.Exceptions;
 using MoneyTracker.Domain.Abstractions;
+using MoneyTracker.Domain.Categories.CategoryAggragate;
+using MoneyTracker.Domain.Transactions.TransactionAggregate;
+using MoneyTracker.Domain.Users.UserAggregate;
+using MoneyTracker.Infrastructure.Configurations;
 using System.Data;
 
 namespace MoneyTracker.Infrastructure;
 
-// Primary Constructor
-
-internal sealed class ApplicationDbContext(IPublisher publisher) : DbContext, IUnitOfWork
+public sealed class ApplicationDbContext : DbContext, IUnitOfWork
 {
-    private readonly IPublisher _publisher = publisher;
+    private readonly IPublisher _publisher;
+
+    public ApplicationDbContext(DbContextOptions options, IPublisher publisher)
+        : base(options)
+    {
+        _publisher = publisher;
+    }
+
+    // For EF migrations
+    public ApplicationDbContext() { }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
@@ -28,6 +39,14 @@ internal sealed class ApplicationDbContext(IPublisher publisher) : DbContext, IU
         }
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .ApplyConfiguration(new UserConfiguration())
+            .ApplyConfiguration(new CategoryConfiguration())
+            .ApplyConfiguration(new TransactionConfiguration());
+    }
+
     private async Task PublishDomainEventsAsync()
     {
         List<IDomainEvent> domainEvents = ChangeTracker
@@ -40,6 +59,7 @@ internal sealed class ApplicationDbContext(IPublisher publisher) : DbContext, IU
                 entity.ClearDomainEvents();
 
                 return domainEvents;
+
             }).ToList();
 
         foreach (IDomainEvent? domainEvent in domainEvents)

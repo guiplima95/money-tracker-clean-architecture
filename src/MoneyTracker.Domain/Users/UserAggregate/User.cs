@@ -1,8 +1,9 @@
 ﻿using MoneyTracker.Domain.Abstractions;
+using MoneyTracker.Domain.Categories.CategoryAggragate;
+using MoneyTracker.Domain.Transactions.TransactionAggregate;
 using MoneyTracker.Domain.Users.Events;
-using MoneyTracker.Domain.Users.UserAggregate;
 
-namespace MoneyTracker.Domain.Users.Aggregators;
+namespace MoneyTracker.Domain.Users.UserAggregate;
 
 public class User : Entity
 {
@@ -29,6 +30,10 @@ public class User : Entity
     public LastName LastName { get; private set; }
 
     public Email Email { get; private set; }
+
+    public ICollection<Transaction>? Transactions { get; set; }
+
+    public ICollection<Category>? Categories { get; set; }
 
     public static User Create(FirstName firstName, LastName lastName, Email email)
     {

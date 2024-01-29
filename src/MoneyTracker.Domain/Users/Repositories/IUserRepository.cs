@@ -1,4 +1,4 @@
-﻿using MoneyTracker.Domain.Users.Aggregators;
+﻿using MoneyTracker.Domain.Users.UserAggregate;
 
 namespace MoneyTracker.Domain.Users.Repositories;
 

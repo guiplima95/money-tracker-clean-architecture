@@ -1,4 +1,6 @@
-﻿using MoneyTracker.Application.Abstractions.Messaging;
+﻿using MoneyTracker.Application.Abstractions.Clock;
+using MoneyTracker.Application.Abstractions.Messaging;
+using MoneyTracker.Application.Exceptions;
 using MoneyTracker.Domain.Abstractions;
 using MoneyTracker.Domain.Categories;
 using MoneyTracker.Domain.Categories.CategoryAggragate;
@@ -8,8 +10,8 @@ using MoneyTracker.Domain.Transactions;
 using MoneyTracker.Domain.Transactions.Repositories;
 using MoneyTracker.Domain.Transactions.TransactionAggregate;
 using MoneyTracker.Domain.Users;
-using MoneyTracker.Domain.Users.Aggregators;
 using MoneyTracker.Domain.Users.Repositories;
+using MoneyTracker.Domain.Users.UserAggregate;
 
 namespace MoneyTracker.Application.Transactions.CreateTransaction;
 
@@ -44,24 +46,31 @@ internal sealed class CreateTransactionCommandHandler(
         }
 
         bool isOverlapping = await _transactionRepository
-            .IsOverlappingAsync(category.Id, request.Amount, request.Note);
+            .IsOverlappingAsync(category.Id, request.Amount, request.Note, cancellationToken);
 
         if (isOverlapping)
         {
             return Result.Failure<Guid>(TransactionErrors.Overlap);
         }
 
-        Transaction transaction = Transaction.Create(new(request.Amount,
+        try
+        {
+            Transaction transaction = Transaction.Create(new(request.Amount,
                                                      Currency.None),
-                                                     new(request.Note),
+                                                     new Note(request.Note),
                                                      DateOnly.FromDateTime(_dateTimeProvider.UtcNow),
                                                      request.CategoryId,
                                                      request.UserId);
 
-        _transactionRepository.Add(transaction);
+            _transactionRepository.Add(transaction);
 
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
 
-        return transaction.Id;
+            return transaction.Id;
+        }
+        catch (ConcurrencyException)
+        {
+            return Result.Failure<Guid>(TransactionErrors.Overlap);
+        }
     }
 }

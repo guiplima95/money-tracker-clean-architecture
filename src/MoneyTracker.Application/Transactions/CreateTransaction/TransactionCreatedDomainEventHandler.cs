@@ -3,8 +3,8 @@ using MoneyTracker.Application.Abstractions.Email;
 using MoneyTracker.Domain.Transactions.Events;
 using MoneyTracker.Domain.Transactions.Repositories;
 using MoneyTracker.Domain.Transactions.TransactionAggregate;
-using MoneyTracker.Domain.Users.Aggregators;
 using MoneyTracker.Domain.Users.Repositories;
+using MoneyTracker.Domain.Users.UserAggregate;
 
 namespace MoneyTracker.Application.Transactions.CreateTransaction;
 

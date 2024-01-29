@@ -1,15 +1,16 @@
 version: '3.4'
 
 services:
-  nbapick4me.api:
+  moneytracker.api:
     image: ${DOCKER_REGISTRY-}moneytrackerapi
-    container_name: MoneyTracker.API
     build:
       context: .
-      dockerfile: src/MoneyTracker.API/Dockerfile
+      dockerfile: src/MoneyTracker.API/MoneyTracker.API/Dockerfile
+    depends_on:
+      - moneytracker-db
 
-  nbapick4me-db:
-    image: postgres:latest
+  moneytracker-db:
+    image:  postgres:latest
     container_name: MoneyTracker.Db
     environment:
       - POSTGRES_DB=moneytracker
@@ -18,4 +19,4 @@ services:
     volumes:
       - ./.containers/database:/var/lib/postgresql/data
     ports:
-      -  5432:5432
+      - 5432:5432  

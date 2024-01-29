@@ -1,4 +1,4 @@
-﻿using MoneyTracker.Domain.Abstractions;
+﻿using MoneyTracker.Application.Abstractions.Clock;
 
 namespace MoneyTracker.Infrastructure.Clock;
 

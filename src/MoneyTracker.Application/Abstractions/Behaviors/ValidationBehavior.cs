@@ -21,7 +21,7 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
             return await next();
         }
 
-        ValidationContext<TRequest> context = new ValidationContext<TRequest>(request);
+        ValidationContext<TRequest> context = new(request);
 
         List<ValidationError> validationErrors = _validators
             .Select(validator => validator.Validate(context))

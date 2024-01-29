@@ -1,11 +1,19 @@
 ﻿using MoneyTracker.Domain.Abstractions;
+using MoneyTracker.Domain.Categories.CategoryAggragate;
 using MoneyTracker.Domain.Shared;
 using MoneyTracker.Domain.Transactions.Events;
+using MoneyTracker.Domain.Users.UserAggregate;
 
 namespace MoneyTracker.Domain.Transactions.TransactionAggregate;
 
 public sealed class Transaction : Entity
 {
+    // EFCore Constructor
+    private Transaction()
+    {
+
+    }
+
     private Transaction(
         Guid id,
         Money amount,
@@ -31,6 +39,10 @@ public sealed class Transaction : Entity
     public Guid CategoryId { get; set; }
 
     public Guid UserId { get; set; }
+
+    public Category? Category { get; set; }
+
+    public User? User { get; set; }
 
     public static Transaction Create(Money amount, Note note, DateOnly date, Guid categoryId, Guid userId)
     {

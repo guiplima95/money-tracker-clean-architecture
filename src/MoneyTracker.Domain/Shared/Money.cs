@@ -1,6 +1,6 @@
 ﻿namespace MoneyTracker.Domain.Shared;
 
-public record Money(decimal Amount, Currency Currency)
+public record Money(decimal Value, Currency Currency)
 {
     public static Money operator +(Money first, Money second)
     {
@@ -9,7 +9,7 @@ public record Money(decimal Amount, Currency Currency)
             throw new InvalidOperationException("Currencies have to be equal");
         }
 
-        return new Money(Amount: first.Amount + second.Amount, Currency: first.Currency);
+        return new Money(Value: first.Value + second.Value, Currency: first.Currency);
     }
 
     public static Money Zero() => new(0, Currency.None);
