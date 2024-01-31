@@ -2,9 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using MoneyTracker.Application.Exceptions;
 using MoneyTracker.Domain.Abstractions;
-using MoneyTracker.Domain.Categories.CategoryAggragate;
-using MoneyTracker.Domain.Transactions.TransactionAggregate;
-using MoneyTracker.Domain.Users.UserAggregate;
 using MoneyTracker.Infrastructure.Configurations;
 using System.Data;
 
@@ -19,9 +16,6 @@ public sealed class ApplicationDbContext : DbContext, IUnitOfWork
     {
         _publisher = publisher;
     }
-
-    // For EF migrations
-    public ApplicationDbContext() { }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {

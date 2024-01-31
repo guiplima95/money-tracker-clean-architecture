@@ -69,7 +69,7 @@ public static class SeedDataExtensions
             transactions.Add(new
             {
                 Id = Guid.NewGuid(),
-                Amount = faker.Commerce.Price(),
+                Amount = decimal.Parse(faker.Commerce.Price()),
                 Note = faker.Commerce.ProductDescription(),
                 Date = DateOnly.FromDateTime(DateTime.UtcNow),
                 CategoryId = categoryId,

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MoneyTracker.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDataBase : Migration
+    public partial class Initial_Database : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -26,12 +26,32 @@ namespace MoneyTracker.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "categories",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    title = table.Column<string>(type: "text", nullable: false),
+                    icon = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: true),
+                    type = table.Column<int>(type: "integer", nullable: false),
+                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_categories", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_categories_users_user_id",
+                        column: x => x.user_id,
+                        principalTable: "users",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "transactions",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    amount_value = table.Column<decimal>(type: "numeric", nullable: false),
-                    amount_currency = table.Column<string>(type: "text", nullable: false),
+                    amount = table.Column<decimal>(type: "numeric", nullable: false),
                     note = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
                     date = table.Column<DateOnly>(type: "date", nullable: false),
                     category_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -42,34 +62,13 @@ namespace MoneyTracker.Infrastructure.Migrations
                 {
                     table.PrimaryKey("pk_transactions", x => x.id);
                     table.ForeignKey(
+                        name: "fk_transactions_categories_category_id",
+                        column: x => x.category_id,
+                        principalTable: "categories",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
                         name: "fk_transactions_users_user_id",
-                        column: x => x.user_id,
-                        principalTable: "users",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "categories",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    title = table.Column<string>(type: "text", nullable: false),
-                    icon = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
-                    type = table.Column<int>(type: "integer", nullable: false),
-                    user_id = table.Column<Guid>(type: "uuid", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_categories", x => x.id);
-                    table.ForeignKey(
-                        name: "fk_categories_transactions_id",
-                        column: x => x.id,
-                        principalTable: "transactions",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_categories_users_user_id",
                         column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "id",
@@ -80,6 +79,11 @@ namespace MoneyTracker.Infrastructure.Migrations
                 name: "ix_categories_user_id",
                 table: "categories",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_transactions_category_id",
+                table: "transactions",
+                column: "category_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_transactions_user_id",
@@ -97,10 +101,10 @@ namespace MoneyTracker.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "categories");
+                name: "transactions");
 
             migrationBuilder.DropTable(
-                name: "transactions");
+                name: "categories");
 
             migrationBuilder.DropTable(
                 name: "users");

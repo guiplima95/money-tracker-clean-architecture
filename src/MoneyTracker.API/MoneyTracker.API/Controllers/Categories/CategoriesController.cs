@@ -1,8 +1,8 @@
 ﻿
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MoneyTracker.Application.Categories;
 using MoneyTracker.Application.Categories.CreateCategory;
+using MoneyTracker.Application.Categories.Dtos;
 using MoneyTracker.Application.Categories.GetCategories;
 using MoneyTracker.Application.Categories.GetCategory;
 using MoneyTracker.Domain.Abstractions;
@@ -14,14 +14,16 @@ public class CategoriesController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
 
-    [HttpGet("user/{userId}")]
+    [HttpGet]
     public async Task<IActionResult> GetCategoriesAsync(
-        Guid userId,
         CancellationToken cancellationToken)
     {
+        // TODO test
+        Guid userId = Guid.Parse("170cefae-52fc-4d19-8f12-467e2ae81ea2");
+
         GetCategoriesQuery query = new(userId);
 
-        Result<IReadOnlyList<CategoryResponse>> result = await _sender.Send(query, cancellationToken);
+        Result<IReadOnlyList<CategoryNameAndTypeDto>> result = await _sender.Send(query, cancellationToken);
 
         return Ok(result.Value);
     }
@@ -33,7 +35,7 @@ public class CategoriesController(ISender sender) : ControllerBase
     {
         GetCategoryQuery query = new(id);
 
-        Result<CategoryResponse> result = await _sender.Send(query, cancellationToken);
+        Result<CategoryDto> result = await _sender.Send(query, cancellationToken);
 
         return Ok(result.Value);
     }
@@ -43,8 +45,10 @@ public class CategoriesController(ISender sender) : ControllerBase
         CategoryRequest request,
         CancellationToken cancellationToken)
     {
+        Guid userId = Guid.Parse("170cefae-52fc-4d19-8f12-467e2ae81ea2");
+
         CreateCategoryCommand command = new(
-            request.UserId, request.Name, request.Type, request.Icon);
+            userId, request.Name, request.Type, request.Icon);
 
         Result<Guid> result = await _sender.Send(command, cancellationToken);
 

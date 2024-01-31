@@ -1,16 +1,17 @@
 ﻿using Dapper;
 using MoneyTracker.Application.Abstractions.Data;
 using MoneyTracker.Application.Abstractions.Messaging;
+using MoneyTracker.Application.Transactions.Dtos;
 using MoneyTracker.Domain.Abstractions;
 using System.Data;
 
 namespace MoneyTracker.Application.Transactions.GetTransaction;
 
-internal sealed class GetTransactionQueryHandler(ISqlConnectionFactory sqlConnectionFactory) : IQueryHandler<GetTransactionQuery, TransactionResponse>
+internal sealed class GetTransactionQueryHandler(ISqlConnectionFactory sqlConnectionFactory) : IQueryHandler<GetTransactionQuery, TransactionDto>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
-    public async Task<Result<TransactionResponse>> Handle(GetTransactionQuery request, CancellationToken cancellationToken)
+    public async Task<Result<TransactionDto>> Handle(GetTransactionQuery request, CancellationToken cancellationToken)
     {
         using IDbConnection connection = _sqlConnectionFactory.CreateConnection();
 
@@ -26,7 +27,7 @@ internal sealed class GetTransactionQueryHandler(ISqlConnectionFactory sqlConnec
             WHERE id = @TransactionId
             """;
 
-        TransactionResponse? transaction = await connection.QueryFirstOrDefaultAsync<TransactionResponse>(
+        TransactionDto? transaction = await connection.QueryFirstOrDefaultAsync<TransactionDto>(
             sql, new
             {
                 request.TransactionId

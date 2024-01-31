@@ -25,11 +25,11 @@ namespace MoneyTracker.Infrastructure.Migrations
             modelBuilder.Entity("MoneyTracker.Domain.Categories.CategoryAggragate.Category", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
                     b.Property<string>("Icon")
-                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)")
                         .HasColumnName("icon");
@@ -63,6 +63,10 @@ namespace MoneyTracker.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric")
+                        .HasColumnName("amount");
+
                     b.Property<Guid>("CategoryId")
                         .HasColumnType("uuid")
                         .HasColumnName("category_id");
@@ -89,6 +93,9 @@ namespace MoneyTracker.Infrastructure.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_transactions");
+
+                    b.HasIndex("CategoryId")
+                        .HasDatabaseName("ix_transactions_category_id");
 
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_transactions_user_id");
@@ -133,13 +140,6 @@ namespace MoneyTracker.Infrastructure.Migrations
 
             modelBuilder.Entity("MoneyTracker.Domain.Categories.CategoryAggragate.Category", b =>
                 {
-                    b.HasOne("MoneyTracker.Domain.Transactions.TransactionAggregate.Transaction", "Transaction")
-                        .WithOne("Category")
-                        .HasForeignKey("MoneyTracker.Domain.Categories.CategoryAggragate.Category", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_categories_transactions_id");
-
                     b.HasOne("MoneyTracker.Domain.Users.UserAggregate.User", "User")
                         .WithMany("Categories")
                         .HasForeignKey("UserId")
@@ -147,13 +147,18 @@ namespace MoneyTracker.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_categories_users_user_id");
 
-                    b.Navigation("Transaction");
-
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("MoneyTracker.Domain.Transactions.TransactionAggregate.Transaction", b =>
                 {
+                    b.HasOne("MoneyTracker.Domain.Categories.CategoryAggragate.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_transactions_categories_category_id");
+
                     b.HasOne("MoneyTracker.Domain.Users.UserAggregate.User", "User")
                         .WithMany("Transactions")
                         .HasForeignKey("UserId")
@@ -161,39 +166,9 @@ namespace MoneyTracker.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("fk_transactions_users_user_id");
 
-                    b.OwnsOne("MoneyTracker.Domain.Shared.Money", "Amount", b1 =>
-                        {
-                            b1.Property<Guid>("TransactionId")
-                                .HasColumnType("uuid")
-                                .HasColumnName("id");
-
-                            b1.Property<string>("Currency")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("amount_currency");
-
-                            b1.Property<decimal>("Value")
-                                .HasColumnType("numeric")
-                                .HasColumnName("amount_value");
-
-                            b1.HasKey("TransactionId");
-
-                            b1.ToTable("transactions");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TransactionId")
-                                .HasConstraintName("fk_transactions_transactions_id");
-                        });
-
-                    b.Navigation("Amount")
-                        .IsRequired();
+                    b.Navigation("Category");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("MoneyTracker.Domain.Transactions.TransactionAggregate.Transaction", b =>
-                {
-                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("MoneyTracker.Domain.Users.UserAggregate.User", b =>

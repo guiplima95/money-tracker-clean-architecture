@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MoneyTracker.Domain.Categories.CategoryAggragate;
 using MoneyTracker.Domain.Shared;
 using MoneyTracker.Domain.Transactions.TransactionAggregate;
 
@@ -17,24 +16,16 @@ internal sealed class TransactionConfiguration : IEntityTypeConfiguration<Transa
         builder.Property(c => c.Date);
 
         builder.Property(tran => tran.Note)
-            .HasMaxLength(500)
-            .HasConversion(note => note.Value, value => new Note(value));
+               .HasMaxLength(500)
+               .HasConversion(note => note.Value, value => new Note(value));
 
-        builder.OwnsOne(c => c.Amount, amountBuilder =>
-        {
-            amountBuilder.Property(money => money.Currency)
-                .HasConversion(currency => currency.Code, code => Currency.FromCode(code));
-        });
-
-        builder.HasOne(t => t.Category)
-            .WithOne(c => c.Transaction)
-            .HasForeignKey<Category>(c => c.Id)
-            .OnDelete(DeleteBehavior.Cascade);
+        builder.Property(tran => tran.Amount)
+               .HasConversion(amount => amount.Value, value => new Money(value, Currency.None));
 
         builder.HasOne(t => t.User)
-            .WithMany(u => u.Transactions)
-            .HasForeignKey(t => t.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+               .WithMany(u => u.Transactions)
+               .HasForeignKey(t => t.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
 
         builder.Property<uint>("Version").IsRowVersion();
     }

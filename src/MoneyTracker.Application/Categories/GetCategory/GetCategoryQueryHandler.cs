@@ -1,16 +1,17 @@
 ﻿using Dapper;
 using MoneyTracker.Application.Abstractions.Data;
 using MoneyTracker.Application.Abstractions.Messaging;
+using MoneyTracker.Application.Categories.Dtos;
 using MoneyTracker.Domain.Abstractions;
 using System.Data;
 
 namespace MoneyTracker.Application.Categories.GetCategory;
 
-internal sealed class GetCategoryQueryHandler(ISqlConnectionFactory sqlConnectionFactory) : IQueryHandler<GetCategoryQuery, CategoryResponse>
+internal sealed class GetCategoryQueryHandler(ISqlConnectionFactory sqlConnectionFactory) : IQueryHandler<GetCategoryQuery, CategoryDto>
 {
     private readonly ISqlConnectionFactory _sqlConnectionFactory = sqlConnectionFactory;
 
-    public async Task<Result<CategoryResponse>> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
+    public async Task<Result<CategoryDto>> Handle(GetCategoryQuery request, CancellationToken cancellationToken)
     {
         using IDbConnection connection = _sqlConnectionFactory.CreateConnection();
 
@@ -24,7 +25,7 @@ internal sealed class GetCategoryQueryHandler(ISqlConnectionFactory sqlConnectio
             WHERE id = @Id
             """;
 
-        CategoryResponse? category = await connection.QueryFirstOrDefaultAsync<CategoryResponse>(
+        CategoryDto? category = await connection.QueryFirstOrDefaultAsync<CategoryDto>(
             sql, new
             {
                 request.Id

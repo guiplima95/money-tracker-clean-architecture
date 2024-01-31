@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MoneyTracker.Domain.Categories.CategoryAggragate;
-using MoneyTracker.Domain.Transactions.TransactionAggregate;
 
 namespace MoneyTracker.Infrastructure.Configurations;
 
@@ -21,12 +20,8 @@ internal sealed class CategoryConfiguration : IEntityTypeConfiguration<Category>
 
         builder.Property(c => c.Icon)
             .HasMaxLength(200)
-            .HasConversion(icon => icon.Value, value => new Icon(value));
-
-        builder.HasOne(c => c.Transaction)
-            .WithOne(t => t.Category)
-            .HasForeignKey<Transaction>(t => t.CategoryId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasConversion(icon => icon.Value, value => new Icon(value))
+            .IsRequired(false);
 
         builder.HasOne(c => c.User)
             .WithMany(u => u.Categories)

@@ -1,5 +1,6 @@
 ﻿using MoneyTracker.Application.Abstractions.Messaging;
+using MoneyTracker.Application.Transactions.Dtos;
 
 namespace MoneyTracker.Application.Transactions.SearchTransaction;
 
-public record SearchTransactionsQuery(DateOnly Date) : IQuery<List<TransactionResponse>>;
+public record SearchTransactionsQuery(Guid UserId, DateOnly Date) : IQuery<List<TransactionCategoryNameDto>>;

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using MoneyTracker.Application.Transactions;
 using MoneyTracker.Application.Transactions.CreateTransaction;
+using MoneyTracker.Application.Transactions.Dtos;
 using MoneyTracker.Application.Transactions.GetTransaction;
 using MoneyTracker.Application.Transactions.SearchTransaction;
 using MoneyTracker.Domain.Abstractions;
@@ -16,12 +16,15 @@ public class TransactionsController(ISender sender) : ControllerBase
 
     [HttpGet]
     public async Task<IActionResult> SearchTransactionsAsync(
-        DateOnly date,
+        DateTime date,
         CancellationToken cancellationToken)
     {
-        SearchTransactionsQuery query = new(date);
+        // TODO test
+        Guid userId = Guid.Parse("170cefae-52fc-4d19-8f12-467e2ae81ea2");
 
-        Result<List<TransactionResponse>> result = await _sender.Send(query, cancellationToken);
+        SearchTransactionsQuery query = new(userId, DateOnly.FromDateTime(date));
+
+        Result<List<TransactionCategoryNameDto>> result = await _sender.Send(query, cancellationToken);
 
         return Ok(result.Value);
     }
@@ -33,7 +36,7 @@ public class TransactionsController(ISender sender) : ControllerBase
     {
         GetTransactionQuery query = new(id);
 
-        Result<TransactionResponse> result = await _sender.Send(query, cancellationToken);
+        Result<TransactionDto> result = await _sender.Send(query, cancellationToken);
 
         if (result.IsSuccess)
         {

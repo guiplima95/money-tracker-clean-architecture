@@ -1,4 +1,4 @@
-﻿namespace MoneyTracker.Application.Transactions;
+﻿namespace MoneyTracker.Application.Transactions.Dtos;
 
 public record TransactionRequest(
     Guid UserId,

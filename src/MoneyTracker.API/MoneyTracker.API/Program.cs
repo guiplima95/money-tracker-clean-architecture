@@ -1,4 +1,3 @@
-using MoneyTracker.API.Extensions;
 using MoneyTracker.Application;
 using MoneyTracker.Infrastructure;
 
@@ -20,9 +19,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    app.ApplyMigrations();
-
-    app.SeedData();
+    // app.ApplyMigrations();
+    // app.SeedData();
 }
 
 app.UseHttpsRedirection();
