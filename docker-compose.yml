@@ -19,4 +19,17 @@ services:
     volumes:
       - ./.containers/database:/var/lib/postgresql/data
     ports:
-      - 5432:5432  
+      - 5432:5432
+      
+  moneytracker-idp:
+    image: jboss/keycloak:latest
+    container_name: MoneyTracker.Identity
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/tmp/moneytracker-realm-export.json
+    volumes:
+      - ./.containers/identity:/opt/jboss/keycloal/standalone/data
+      - ./.files/moneytracker-realm-export.json:/tmp/moneytracker-realm-export.json
+    ports:
+      - 18080:8080

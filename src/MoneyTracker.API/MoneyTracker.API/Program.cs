@@ -1,3 +1,4 @@
+using MoneyTracker.API.Extensions;
 using MoneyTracker.Application;
 using MoneyTracker.Infrastructure;
 
@@ -13,17 +14,25 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 WebApplication app = builder.Build();
 
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 
-    // app.ApplyMigrations();
-    // app.SeedData();
+    //app.ApplyMigrations();
+    //app.SeedData();
 }
 
 app.UseHttpsRedirection();
+
+// Middleware - Global custom excepetion handler
+app.UseCustomExceptionHandler();
+
+// Authentication
+app.UseAuthentication();
+
+// Authorization
+app.UseAuthorization();
 
 app.MapControllers();
 

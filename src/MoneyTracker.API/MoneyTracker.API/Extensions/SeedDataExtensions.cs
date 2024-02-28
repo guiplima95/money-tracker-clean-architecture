@@ -33,7 +33,8 @@ public static class SeedDataExtensions
                 Id = userId,
                 FirstName = firstName,
                 LastName = lastName,
-                Email = faker.Internet.Email(firstName, lastName, "gmail", null)
+                Email = faker.Internet.Email(firstName, lastName, "gmail", null),
+                IdentntyId = Guid.NewGuid().ToString(),
             });
 
             categories.Add(new
@@ -79,8 +80,8 @@ public static class SeedDataExtensions
 
         const string sqlUsers = """
             INSERT INTO public.users
-            (id, first_name, last_name, email)
-            VALUES(@Id, @FirstName, @LastName, @Email)
+            (id, first_name, last_name, email, identity_id)
+            VALUES(@Id, @FirstName, @LastName, @Email, @IdentityId)
             """;
 
         connection.Execute(sqlUsers, users);

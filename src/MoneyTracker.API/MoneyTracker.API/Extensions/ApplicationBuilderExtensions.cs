@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MoneyTracker.API.Middleware;
 using MoneyTracker.Infrastructure;
 
 namespace MoneyTracker.API.Extensions;
@@ -12,5 +13,10 @@ public static class ApplicationBuilderExtensions
         using ApplicationDbContext dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
         dbContext.Database.Migrate();
+    }
+
+    public static void UseCustomExceptionHandler(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<ExceptionHandlingMiddleware>();
     }
 }
