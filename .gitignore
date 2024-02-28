@@ -1671,3 +1671,4 @@ FodyWeavers.xsd
 /.containers/database/base/16384
 /.vscode/launch.json
 /.vscode/tasks.json
+/.files/moneytracker-realm-export.json
