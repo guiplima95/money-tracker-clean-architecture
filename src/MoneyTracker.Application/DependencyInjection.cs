@@ -16,8 +16,6 @@ public static class DependencyInjection
             configuration.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
-        services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
-
         //services.AddTransient<CashingService>();
 
         return services;

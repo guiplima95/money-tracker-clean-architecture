@@ -9,10 +9,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["src/MoneyTracker.API/MoneyTracker.API/MoneyTracker.API.csproj", "src/MoneyTracker.API/MoneyTracker.API/"]
-RUN dotnet restore "./src/MoneyTracker.API/MoneyTracker.API/./MoneyTracker.API.csproj"
+COPY ["src/MoneyTracker.API/MoneyTracker.API.csproj", "src/MoneyTracker.API/"]
+RUN dotnet restore "./src/MoneyTracker.API/MoneyTracker.API.csproj"
 COPY . .
-WORKDIR "/src/src/MoneyTracker.API/MoneyTracker.API"
+WORKDIR "/src/MoneyTracker.API/MoneyTracker.API"
 RUN dotnet build "./MoneyTracker.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

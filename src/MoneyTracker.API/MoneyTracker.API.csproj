@@ -8,7 +8,7 @@
     <UserSecretsId>a25121d6-55dd-46a4-90e3-f7138fb139a2</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..</DockerfileContext>
-    <DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <DockerComposeProjectPath>..\..\config\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MoneyTracker.Application\MoneyTracker.Application.csproj" />
-    <ProjectReference Include="..\..\MoneyTracker.Infrastructure\MoneyTracker.Infrastructure.csproj" />
+    <ProjectReference Include="..\MoneyTracker.Application\MoneyTracker.Application.csproj" />
+    <ProjectReference Include="..\MoneyTracker.Infrastructure\MoneyTracker.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -55,7 +55,7 @@ internal sealed class CreateTransactionCommandHandler(
 
         try
         {
-            Transaction transaction = Transaction.Create(new(request.Amount,
+            var transaction = Transaction.Create(new(request.Amount,
                                                      Currency.None),
                                                      new Note(request.Note),
                                                      DateOnly.FromDateTime(_dateTimeProvider.UtcNow),
