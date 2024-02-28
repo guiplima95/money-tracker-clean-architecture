@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracker.Application", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracker.UnitTests", "test\MoneyTracker.UnitTests\MoneyTracker.UnitTests.csproj", "{BE2E0438-7FD8-4964-995B-31C6EACA3397}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracker.API", "src\MoneyTracker.API\MoneyTracker.API\MoneyTracker.API.csproj", "{FFF7D726-AA15-4D2F-ACA5-7A5AEBABEF0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MoneyTracker.API", "src\MoneyTracker.API\MoneyTracker.API.csproj", "{FFF7D726-AA15-4D2F-ACA5-7A5AEBABEF0E}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{B87090D7-B339-4F99-BECF-63C85659A16A}"
 EndProject

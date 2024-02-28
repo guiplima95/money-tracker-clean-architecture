@@ -42,8 +42,7 @@ public class CategoriesController(ISender sender) : ControllerBase
 
     [HttpPost]
     public async Task<IActionResult> CreateCategoryAsync(
-        CategoryRequest request,
-        CancellationToken cancellationToken)
+        CategoryRequest request, CancellationToken cancellationToken)
     {
         Guid userId = Guid.Parse("170cefae-52fc-4d19-8f12-467e2ae81ea2");
 
